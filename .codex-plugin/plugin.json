@@ -1,6 +1,6 @@
 {
   "name": "myconfig",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "Run, check, encrypt and fill in config files whose secret values are MyConfig tokens, without putting decrypted values into the conversation. Skill for the myconfig CLI.",
   "author": {
     "name": "MyIAM"
