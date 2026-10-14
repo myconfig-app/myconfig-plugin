@@ -232,5 +232,5 @@ opened without the app by the user running the command with `--password-stdin`.
 `lib`, `gen`, `ask`, `rekey`, `lock` and `unlock` need MyConfig app 0.8.0 or later. `lib mkdir`,
 `lib mv`, `lib rename` and several items in one `lib rm` need the app and CLI 0.9.0 or later
 (`myconfig status` shows both versions). If a command says the app "could not handle this request",
-or the CLI does not know a `lib` command, ask the user to update both
-(`brew upgrade --cask myconfig myconfig-cli`).
+or the CLI does not know a `lib` command, ask the user to update MyConfig
+(`brew upgrade --cask myconfig`; the app comes with the `myconfig` command line tool).

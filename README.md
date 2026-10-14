@@ -24,7 +24,7 @@ Organizing the library from the agent (`lib mkdir`, `lib mv`, `lib rename`, seve
 ```bash
 brew tap myconfig-app/myconfig
 brew trust --tap myconfig-app/myconfig
-brew install --cask myconfig-cli    # installs the app first if needed
+brew install --cask myconfig        # the app, with the myconfig command line tool
 ```
 
 Then open MyConfig and turn on Settings > Security > **Accept command-line requests**.
@@ -99,7 +99,7 @@ MyConfig 앱과 `myconfig` 명령줄 도구 0.8.0 이상(macOS, Apple silicon). 
 ```bash
 brew tap myconfig-app/myconfig
 brew trust --tap myconfig-app/myconfig
-brew install --cask myconfig-cli    # 앱이 없으면 앱부터 설치
+brew install --cask myconfig        # 앱과 myconfig 명령줄 도구
 ```
 
 MyConfig를 열고 설정 > 보안 > **명령줄 도구 요청 받기**를 켭니다. `myconfig status`로 연결을 확인합니다.
