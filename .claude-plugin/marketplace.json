@@ -1,0 +1,20 @@
+{
+  "name": "myconfig",
+  "description": "MyConfig plugin for AI coding agents: use encrypted values in config files without putting them into the conversation",
+  "owner": {
+    "name": "MyIAM"
+  },
+  "plugins": [
+    {
+      "name": "myconfig",
+      "source": "./",
+      "description": "Run, check, encrypt and fill in config files whose secret values are MyConfig tokens, without putting decrypted values into the conversation. Skill for the myconfig CLI.",
+      "version": "0.8.0",
+      "author": {
+        "name": "MyIAM"
+      },
+      "license": "Apache-2.0",
+      "keywords": ["myconfig", "secrets", "config", "dotenv", "encryption", "cli"]
+    }
+  ]
+}
