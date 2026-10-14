@@ -1,6 +1,6 @@
 ---
 name: myconfig
-description: Work with config files that contain MyConfig tokens (`mycfg:e:1:…:end`, `mycfg:p:1:…:end`) using the myconfig CLI. Use when running a service or tests that need those values, when a config file or .env needs a secret value (new or from the user), when a plaintext secret should be encrypted, when tokens should move to another key, before committing config changes, or when the user mentions MyConfig, myconfig run, the MyConfig library, or encrypted values in .env/YAML/properties/JSON files.
+description: Work with config files that contain MyConfig tokens (`mycfg:e:1:…:end`, `mycfg:p:1:…:end`) using the myconfig CLI. Use when running a service or tests that need those values, when a config file or .env needs a secret value (new or from the user), when a plaintext secret should be encrypted, when tokens should move to another key, before committing config changes, when organizing the MyConfig app's library (adding files, making, moving, renaming or removing folders), or when the user mentions MyConfig, myconfig run, the MyConfig library, or encrypted values in .env/YAML/properties/JSON files.
 ---
 
 # MyConfig CLI
@@ -148,9 +148,14 @@ myconfig lib ls                        # folders, files, real paths, default key
 myconfig lib ls Projects/api           # one library folder
 myconfig lib ls --json                 # with item IDs, linked folders and unsaved flags
 myconfig lib ls --paths                # real file paths only
+myconfig lib mkdir Projects/api Projects/batch   # virtual folders, parents included
 myconfig lib add config/.env.staging --to Projects
 myconfig lib add ~/code/api            # a folder becomes a linked folder
-myconfig lib rm Projects/old.env       # removes it from the library; the file stays
+myconfig lib mv Projects/old.env Projects/legacy --to Archive
+myconfig lib mv Archive/old.env --top  # to the top of the library
+myconfig lib rename Projects/api api-server   # a virtual folder, or the shown name of a file
+myconfig lib rename Projects/api-server/app.yaml --reset   # the file item shows its file name again
+myconfig lib rm Projects/old.env Projects/legacy   # removes them from the library; the files stay
 myconfig lib key Projects prod         # default key for new values in that folder or file
 myconfig lib key Projects/api/.env --clear
 myconfig open .env                     # show the file to the user in the app (not added)
@@ -161,7 +166,27 @@ myconfig open .env                     # show the file to the user in the app (n
   ID from `myconfig lib ls --json`.
 - `--to` takes a virtual folder (not a linked folder) and applies to files only.
 - Linked folders are listed by their root path only; list their files yourself.
-- `lib add`, `lib rm` and `lib key` ask for approval with Touch ID. Files are never deleted.
+- `lib mkdir` makes only virtual folders (nothing on disk) and not inside a linked folder. Existing
+  folders are fine. Make the folder before `lib add --to`.
+- `lib mv` needs `--to FOLDER` or `--top`. A folder moves with everything inside it.
+- `lib rm` of a virtual folder removes everything inside it from the library. Look at it with
+  `myconfig lib ls FOLDER` first, and remove only what the user asked for.
+- `lib mkdir`, `lib mv`, `lib rename` and `lib rm` change the library only; real files and folders
+  are never created, moved, renamed or deleted. Several paths or items take one approval.
+- Virtual folder names stay unique within a folder, and nothing goes inside a linked folder. If the
+  library cannot change that way (a linked folder in the way, the name is already there, a folder
+  into itself, the same file already there), the command changes nothing and exits with 1; the
+  message names the place. Files in one folder may share a name.
+- `lib add`, `lib mkdir`, `lib mv`, `lib rename`, `lib rm` and `lib key` ask for approval with Touch ID.
+
+Files with the same name in several places (each module's `application.yaml`): give each one a
+virtual folder, so they are told apart in the app.
+
+```bash
+myconfig lib mkdir Work/api-server Work/batch
+myconfig lib add api-server/src/main/resources/application.yaml --to Work/api-server
+myconfig lib add batch/src/main/resources/application.yaml --to Work/batch
+```
 
 ## Before committing
 
@@ -193,7 +218,7 @@ myconfig schema --json     # commands and options
 | Code | Meaning | What to do |
 |---|---|---|
 | 0 | OK | |
-| 1 | Failed (unknown key or library item, file error, `check` found candidates, `lint` found errors, unsaved changes in the app) | Read the message on stderr |
+| 1 | Failed (unknown key or library item, file error, `check` found candidates, `lint` found errors, unsaved changes in the app, the library cannot change that way) | Read the message on stderr |
 | 2 | Usage error, or several library items match | Fix the command; use the item ID |
 | 3 | Approval or key needed (app not running, vault locked, denied, timed out, app too old, refused inside an AI agent) | Ask the user to open the MyConfig app, approve, update the app, or run the command themselves with `!` |
 | other | `run` returns the child command's exit code | |
@@ -204,6 +229,8 @@ myconfig schema --json     # commands and options
 Settings > Security > "Accept command-line requests". Password tokens (`mycfg:p:`) can be
 opened without the app by the user running the command with `--password-stdin`.
 
-`lib`, `gen`, `ask`, `rekey`, `lock` and `unlock` need MyConfig app 0.8.0 or later. If one of
-them says the app "could not handle this request", ask the user to update the app
+`lib`, `gen`, `ask`, `rekey`, `lock` and `unlock` need MyConfig app 0.8.0 or later. `lib mkdir`,
+`lib mv`, `lib rename` and several items in one `lib rm` need the app and CLI 0.9.0 or later
+(`myconfig status` shows both versions). If a command says the app "could not handle this request",
+or the CLI does not know a `lib` command, ask the user to update both
 (`brew upgrade --cask myconfig myconfig-cli`).

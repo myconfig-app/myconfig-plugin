@@ -17,7 +17,9 @@ Every request that opens, creates or changes values is approved by you in the My
 
 ## Prerequisites
 
-The MyConfig app and the `myconfig` command line tool, 0.8.0 or later (macOS, Apple silicon):
+The MyConfig app and the `myconfig` command line tool, 0.8.0 or later (macOS, Apple silicon).
+Organizing the library from the agent (`lib mkdir`, `lib mv`, `lib rename`, several items in one
+`lib rm`) needs 0.9.0 or later:
 
 ```bash
 brew tap myconfig-app/myconfig
@@ -91,7 +93,8 @@ Gemini CLI)가 다룰 수 있게 하는 스킬입니다. 서비스 실행, 평�
 
 ### 준비
 
-MyConfig 앱과 `myconfig` 명령줄 도구 0.8.0 이상(macOS, Apple silicon):
+MyConfig 앱과 `myconfig` 명령줄 도구 0.8.0 이상(macOS, Apple silicon). 에이전트가 라이브러리를 정리하는 명령
+(`lib mkdir`, `lib mv`, `lib rename`, 여러 항목 `lib rm`)은 0.9.0 이상:
 
 ```bash
 brew tap myconfig-app/myconfig
