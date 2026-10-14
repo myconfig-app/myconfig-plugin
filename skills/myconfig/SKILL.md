@@ -113,7 +113,7 @@ some-command-that-prints-the-secret | myconfig set .env --key DB_PASSWORD --stdi
   (`--key-file`, `--no-agent`).
 - A missing key is added (.env, .properties, top-level YAML/TOML keys); a missing file of those
   types is created (mode 600). For JSON and nested YAML paths, add the key to the file first
-  (with an empty value) and then run the command.
+  with an empty value (`password:` in YAML) and then run the command; the value goes there.
 - Keys that already have a value are not overwritten without `--replace` (`set` always replaces).
 - If the file has unsaved changes in the app, the command stops (exit 1). Ask the user to save.
 
@@ -156,8 +156,10 @@ myconfig lib key Projects/api/.env --clear
 myconfig open .env                     # show the file to the user in the app (not added)
 ```
 
-- An item is an item ID, a library path (`Projects/api/.env`) or a real file path. If several
-  items match, the command stops with exit 2; use the ID from `myconfig lib ls --json`.
+- An item is an item ID, a library path (`Projects/api/.env`) or a real file path. Write a file in
+  the current folder as `./.env`. If several items match, the command stops with exit 2; use the
+  ID from `myconfig lib ls --json`.
+- `--to` takes a virtual folder (not a linked folder) and applies to files only.
 - Linked folders are listed by their root path only; list their files yourself.
 - `lib add`, `lib rm` and `lib key` ask for approval with Touch ID. Files are never deleted.
 
