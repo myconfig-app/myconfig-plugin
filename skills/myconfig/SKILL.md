@@ -39,8 +39,11 @@ decrypted value reach the conversation. The rules below exist for that.
 7. **Key and file names are information too.** Run `myconfig keys list` or `myconfig lib ls` only
    when the task needs it (the app asks the user once before showing the library).
 8. **Approvals happen in the app.** The MyConfig app shows an approval dialog (and Touch ID) for
-   each request that opens, creates or changes values. If a command waits, tell the user to look
-   at the MyConfig app.
+   requests that open, create or change values. If a command waits, tell the user to look at the
+   MyConfig app. When the user picks "Allow 15 minutes", later requests from the same AI session
+   (library changes, `encrypt`, `set`, `gen`, `rekey`, and the exact same `run` command line with
+   already approved values) go through without a dialog; `lib key`, printing values and a changed
+   `run` command always ask. Do not ask the user to allow a session; it is their choice.
 
 ## Run a program with decrypted values
 
@@ -177,7 +180,8 @@ myconfig open .env                     # show the file to the user in the app (n
   library cannot change that way (a linked folder in the way, the name is already there, a folder
   into itself, the same file already there), the command changes nothing and exits with 1; the
   message names the place. Files in one folder may share a name.
-- `lib add`, `lib mkdir`, `lib mv`, `lib rename`, `lib rm` and `lib key` ask for approval with Touch ID.
+- `lib add`, `lib mkdir`, `lib mv`, `lib rename`, `lib rm` and `lib key` ask for approval with Touch ID
+  (`lib key` every time; the others not again during a session the user allowed).
 
 Files with the same name in several places (each module's `application.yaml`): give each one a
 virtual folder, so they are told apart in the app.
