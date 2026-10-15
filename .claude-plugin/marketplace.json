@@ -9,7 +9,7 @@
       "name": "myconfig",
       "source": "./",
       "description": "Run, check, encrypt and fill in config files whose secret values are MyConfig tokens, without putting decrypted values into the conversation. Skill for the myconfig CLI.",
-      "version": "0.10.1",
+      "version": "0.10.2",
       "author": {
         "name": "MyIAM"
       },

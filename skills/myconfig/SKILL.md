@@ -11,6 +11,59 @@ they are needed, with keys from the MyConfig app (Touch ID approval), a CI key, 
 It can also ask the running app to create, collect and re-encrypt values, so you can set up
 config files without ever seeing a secret.
 
+## What you can do with it
+
+Each item names the commands and the section below with the details.
+
+- **Run a service, tests or a build that needs the secrets** (`myconfig run`). The values are
+  decrypted only into the child process: as environment variables from a `.env`, as
+  `SPRING_APPLICATION_JSON` from a Spring Boot `application.yaml` (with profiles), as prefixed
+  variables from YAML/JSON/properties keys, or as a temporary decrypted file (mode 600) that is
+  removed when the command ends. Several sources can be combined. The exit code is the child's,
+  so test and build results work as usual. In CI, a key file opens the tokens without the app.
+  → *Run a program with decrypted values*
+- **Find secrets that were left in plaintext** (`myconfig check`). Scans files and folders for
+  secret-looking keys whose value is not a token and prints file, line and column, never the
+  value. Works without the app; exit code 1 when something is found, so it fits scripts and CI.
+  → *Find and encrypt plaintext secrets*
+- **Encrypt them in place** (`myconfig encrypt --in-place`): one key by name (`DB_PASSWORD`,
+  `spring.datasource.password`), a value at a line:column where there is no key name (Markdown
+  notes, shell scripts), or every candidate in a file at once. Encoding, BOM, line endings and
+  file mode stay as they were. The value never appears in the conversation or on a command line.
+  → *Find and encrypt plaintext secrets*
+- **Fill in a value the user has** (`myconfig ask`). The user types API keys or passwords into
+  the MyConfig app (up to 20 keys in one request, with your hint where to find them); only tokens
+  reach the file. → *Fill in secret values without seeing them*
+- **Create a new random secret** (`myconfig gen`): JWT secrets, session secrets, database
+  passwords you are setting up, as alnum, hex, base64, uuid or passphrase.
+  → *Fill in secret values without seeing them*
+- **Store a value another command prints** (`myconfig set --stdin`, only when the user asks):
+  pipe it straight into the file as a token.
+- **Set up new config files**: `ask`, `gen` and `set` add a missing key to .env, .properties and
+  top-level YAML/TOML keys, and create a missing file of those types (mode 600). Each value can
+  go under a chosen key (`--using prod`) or the file's or folder's default key.
+- **Move tokens to another key** (`myconfig rekey`), e.g. from a dev key to the prod key, for
+  whole files or only the tokens of one key, with one approval. Values never leave the app.
+  → *Move tokens to another key*
+- **See where the tokens are and check syntax, without the app** (`myconfig tokens`,
+  `myconfig lint`): file:line:column, key name and key ID of each token; syntax errors with the
+  app's rules. → *Inspect files without the app*
+- **Guard commits** (`myconfig check --staged`, also as a git pre-commit hook) so plaintext
+  secrets in staged config changes are caught before they are committed. → *Before committing*
+- **Organize the MyConfig app's library** (`myconfig lib ls`, `lib add`, `lib mkdir`, `lib mv`,
+  `lib rename`, `lib rm`, `lib key`, `myconfig open`): list what is in it with real paths,
+  default keys and open tabs; add files and linked folders; make, move, rename and remove virtual
+  folders; set a default key for a folder or file; open a file in the app for the user. Only the
+  library changes; files on disk are never moved or deleted. → *The MyConfig app's library*
+- **Check and control the app and vault** (`myconfig status`, `unlock`, `lock`, `keys list`,
+  `schema`): whether the app is reachable and which versions run, show the unlock window, lock the
+  vault when done, list key labels when a key choice is needed, and read every command and
+  option as JSON. → *Status, keys and the vault*
+
+What you do **not** do: read decrypted values (`decrypt`, `export`), type or ask for passwords
+and secrets in the chat, or approve requests. The user approves in the app (Touch ID); password
+tokens (`mycfg:p:`) are opened by the user running the command themselves. See *Rules*.
+
 **Anything printed into this conversation is sent to the model provider.** Never let a
 decrypted value reach the conversation. The rules below exist for that.
 
